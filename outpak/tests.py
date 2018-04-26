@@ -389,42 +389,31 @@ class TestOutpakClass(unittest.TestCase):
                 verbose=True
             )
 
-        assert_command({
-                'name': 'foo',
-                'option': '-opt',
-                'version': '1.2.3',
-                'signal': '>',
-                'using_line': False
-            },
-            'pip install -opt foo">=1.2.3"'
-        )
-        assert_command({
-                'name': 'foo',
-                'option': None,
-                'version': '1.2.3',
-                'signal': '=',
-                'using_line': False
-            },
-            'pip install foo==1.2.3'
-        )
-        assert_command({
-                'name': 'foo',
-                'option': '-e',
-                'version': '1.2.3',
-                'signal': '<',
-                'using_line': False
-            },
-            'pip install -q -e foo"<=1.2.3"',
-            pip_quiet=True
-        )
-        assert_command({
-                'line': 'foo==6.6.6',
-                'option': None,
-                'using_line': True
-            },
-            'pip install -q "foo==6.6.6"',
-            pip_quiet=True
-        )
+        package = {
+            'name': 'foo',
+            'option': '-opt',
+            'version': '1.2.3',
+            'signal': '>',
+            'using_line': False
+        }
+        assert_command(package,
+                       'pip install -opt foo">=1.2.3"')
+
+        package['option'] = None
+        package['signal'] = '='
+        assert_command(package,
+                       'pip install foo==1.2.3')
+
+        package['option'] = '-e'
+        assert_command(package,
+                       'pip install -q -e foo=="1.2.3"',
+                       pip_quiet=True)
+
+        package['using_line'] = True
+        package['line'] = 'foo==6.6.6'
+        assert_command(package,
+                       'pip install -q "foo==6.6.6"',
+                       pip_quiet=True)
 
     @patch("outpak.main.subprocess.check_output",
            autospec=True, return_value="cmd")

@@ -34,8 +34,7 @@ def get_pak_yml_path():
     return os.environ.get('OUTPAK_FILE', None) or default_path
 
 
-def run():
-    """Run main command for outpak."""
+def parse_args():
     parser = argparse.ArgumentParser(
         description='Outpak v{}'.format(__version__)
     )
@@ -57,12 +56,13 @@ def run():
         version=__version__,
         help='Displays version and quits'
     )
-    parser.add_argument(
-        'command',
-        choices=['install']
-    )
+    parser.add_argument('command', choices=['install'])
+    return parser.parse_args()
 
-    arguments = parser.parse_args()
+
+def run():
+    """Run main command for outpak."""
+    arguments = parse_args()
 
     if arguments.command == 'install':
         newpak = Outpak(arguments.config, pip_quiet=arguments.quiet)

@@ -1,8 +1,6 @@
 test:
-	nosetests --with-coverage --cover-package=outpak --cover-min-percentage=80
-	pydocstyle --match-dir=outpak
-	pycodestyle outpak/
-
+	pip install tox
+	tox
 break:
 	nosetests -v --nocapture --ipdb
 
